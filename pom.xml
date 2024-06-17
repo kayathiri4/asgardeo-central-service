@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+  ~
+  ~ This software is the property of WSO2 LLC. and its suppliers, if any.
+  ~ Dissemination of any information or reproduction of any material contained
+  ~ herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
+  ~ You may not alter or remove any copyright or other notice from copies of this content.
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.wso2</groupId>
+        <artifactId>wso2</artifactId>
+        <version>5.3</version>
+    </parent>
+
+    <groupId>com.wso2.identity.asgardeo.central.service</groupId>
+    <artifactId>asgardeo-central-service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>asgardeo-central-service</name>
+    <description>asgardeo-central-service</description>
+    <packaging>pom</packaging>
+    <properties>
+        <java.version>21</java.version>
+
+        <commons-lang3.version>3.14.0</commons-lang3.version>
+        <commons-dbcp2.version>2.12.0</commons-dbcp2.version>
+
+        <javax.ws.rs-api.version>2.1.1</javax.ws.rs-api.version>
+        <javax-annotation-api.version>1.3.2</javax-annotation-api.version>
+        <swagger.jaxrs.version>1.6.14</swagger.jaxrs.version>
+        <swagger-annotations.version>2.2.21</swagger-annotations.version>
+
+        <spring-boot.version>3.2.5</spring-boot.version>
+        <springframework.version>6.1.6</springframework.version>
+
+        <org.wso2.carbon.database.utils.version>2.0.13</org.wso2.carbon.database.utils.version>
+        <org.wso2.carbon.database.utils.version.range>[2.0.0,2.1.0)</org.wso2.carbon.database.utils.version.range>
+
+        <!-- Spotbugs versions -->
+        <spotbugs-maven-plugin.version>4.8.5.0</spotbugs-maven-plugin.version>
+        <findsecbugs-plugin.version>1.13.0</findsecbugs-plugin.version>
+
+        <log4j.version>2.23.1</log4j.version>
+        <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
+
+        <nimbus.oauth2.version>10.9.1</nimbus.oauth2.version>
+
+        <httpclient5.version>5.1</httpclient5.version>
+
+        <maven.buildnumber.plugin.version>1.4</maven.buildnumber.plugin.version>
+        <build.helper.maven.plugin.version>1.8</build.helper.maven.plugin.version>
+
+    </properties>
+
+    <modules>
+        <module>components/com.wso2.identity.asgardeo.central.service.common</module>
+        <module>components/com.wso2.identity.asgardeo.central.service.core</module>
+        <module>components/com.wso2.identity.asgardeo.central.service.rest.api</module>
+        <module>components/com.wso2.identity.asgardeo.central.service.api.server</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.wso2.identity.asgardeo.central.service</groupId>
+                <artifactId>com.wso2.identity.asgardeo.central.service.common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wso2.identity.asgardeo.central.service</groupId>
+                <artifactId>com.wso2.identity.asgardeo.central.service.core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wso2.identity.asgardeo.central.service</groupId>
+                <artifactId>com.wso2.identity.asgardeo.central.service.rest.api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wso2.identity.asgardeo.central.service</groupId>
+                <artifactId>com.wso2.identity.asgardeo.central.service.api.server</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.utils</groupId>
+                <artifactId>org.wso2.carbon.database.utils</artifactId>
+                <version>${org.wso2.carbon.database.utils.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-configuration-processor</artifactId>
+                <optional>true</optional>
+                <version>${spring-boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-dbcp2</artifactId>
+                <version>${commons-dbcp2.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>javax.ws.rs</groupId>
+                <artifactId>javax.ws.rs-api</artifactId>
+                <version>${javax.ws.rs-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.annotation</groupId>
+                <artifactId>javax.annotation-api</artifactId>
+                <version>${javax-annotation-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-jaxrs</artifactId>
+                <version>${swagger.jaxrs.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger-annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${springframework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <scope>test</scope>
+                <version>${spring-boot.version}</version>
+            </dependency>
+
+            <!-- Ensure to include spring-jcl -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jcl</artifactId>
+                <version>${springframework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-jcl</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openapitools</groupId>
+                <artifactId>jackson-databind-nullable</artifactId>
+                <version>${jackson-databind-nullable.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.nimbusds</groupId>
+                <artifactId>oauth2-oidc-sdk</artifactId>
+                <version>${nimbus.oauth2.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.httpcomponents.client5</groupId>
+                <artifactId>httpclient5</artifactId>
+                <version>${httpclient5.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents.core5</groupId>
+                <artifactId>httpcore5</artifactId>
+                <version>${httpclient5.version}</version> <!-- Check for the latest version -->
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents.core5</groupId>
+                <artifactId>httpcore5-h2</artifactId>
+                <version>${httpclient5.version}</version> <!-- Check for the latest version -->
+            </dependency>
+            <dependency>
+                <groupId>com.microsoft.sqlserver</groupId>
+                <artifactId>mssql-jdbc</artifactId>
+                <version>10.2.1.jre11</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>buildnumber-maven-plugin</artifactId>
+                    <version>${maven.buildnumber.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>${build.helper.maven.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>3.2.1</version>
+                    <executions>
+                        <execution>
+                            <id>validate</id>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                            <configuration>
+                                <!-- TODO: Keep this pointed to jdk-17 branch until https://github.com/wso2/code-quality-tools/issues/20
+                                     is fixed and merged to master. -->
+                                <configLocation>
+                                    https://raw.githubusercontent.com/wso2/code-quality-tools/jdk-17/checkstyle/jdk-17/checkstyle.xml
+                                </configLocation>
+                                <suppressionsLocation>
+                                    https://raw.githubusercontent.com/wso2/code-quality-tools/jdk-17/checkstyle/jdk-17/suppressions.xml
+                                </suppressionsLocation>
+                                <consoleOutput>true</consoleOutput>
+                                <failsOnError>true</failsOnError>
+                                <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                                <excludes>**/gen/**/*</excludes>
+                            </configuration>
+                        </execution>
+                    </executions>
+                    <dependencies>
+                        <!-- We have to do this because of transitively checkstyle plugin is getting google-collections dependency.-->
+                        <!-- This is conflicting with guava plugin (https://stackoverflow.com/questions/3126330/no-such-method-error-immutablelist-copyof).-->
+                        <!-- So we have to exclude google-collections dependency from checkstyle plugin. -->
+                        <!-- TODO: Tracked with https://github.com/wso2-enterprise/asgardeo-feature-gate/issues/26-->
+                        <dependency>
+                            <groupId>org.apache.maven.doxia</groupId>
+                            <artifactId>doxia-core</artifactId>
+                            <version>1.11.1</version>
+                            <exclusions>
+                                <exclusion>
+                                    <groupId>com.google.collections</groupId>
+                                    <artifactId>google-collections</artifactId>
+                                </exclusion>
+                            </exclusions>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>${spotbugs-maven-plugin.version}</version>
+                <configuration>
+                    <effort>Max</effort>
+                    <threshold>High</threshold>
+                    <failOnError>true</failOnError>
+                    <maxHeap>1024</maxHeap>
+                    <plugins>
+                        <plugin>
+                            <groupId>com.h3xstream.findsecbugs</groupId>
+                            <artifactId>findsecbugs-plugin</artifactId>
+                            <version>${findsecbugs-plugin.version}</version>
+                        </plugin>
+                    </plugins>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>analyze-compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

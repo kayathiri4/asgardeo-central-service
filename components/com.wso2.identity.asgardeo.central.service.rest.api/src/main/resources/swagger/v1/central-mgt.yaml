@@ -1,0 +1,210 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Asgardeo - Central Service API
+  description: >-
+    This document specifies a **RESTfulAPI**  for **Central Service** in the WSO2 Asgardeo Identity Server.
+  contact:
+    name: WSO2 Identity Server
+    url: 'https://wso2.com/identity-and-access-management/'
+    email: architecture@wso2.org
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+servers:
+  - url: 'http://{host-name}/api/asgardeo/central-service/v1'
+    variables:
+      host-name:
+        default: localhost:8080
+security:
+  - bearerAuth: []
+paths:
+  /tenant:
+    post:
+      tags:
+        - Tenants
+      summary: Reserve tenant by new user in the sign up.
+      operationId: addTenantForRegistration
+      description: |
+        This API provides the capability to create tenants from the new asgardeo users at the sign up.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantReserveRequest'
+        description: This represents the tenant to be created.
+        required: true
+      responses:
+        '201':
+          description: Item Created
+          headers:
+            location:
+              description: Location of the newly created tenant
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      tags:
+        - Tenants
+      summary: Delete tenant.
+      operationId: deleteTenant
+      description: |
+        This API provides the capability to delete tenant.
+      parameters:
+            - $ref: '#/components/parameters/tenantIDQueryParam'
+      responses:
+        '204':
+          description: Item Deleted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /tenant/check-domain:
+    get:
+      tags:
+        - Tenants
+      summary: Check domain Existence.
+      operationId: isDomainExist
+      description: |
+        Check the tenant existence.
+      parameters:
+        - $ref: '#/components/parameters/tenantDomainQueryParam'
+        - $ref: '#/components/parameters/tenantAdminQueryParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/TenantExist'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /tenant/health:
+    get:
+      tags:
+        - Health
+      summary: Check health of the API.
+      description: |
+        This API is used to check health of the API.
+      operationId: getHealth
+      responses:
+        '200':
+          description: OK
+        '500':
+          $ref: '#/components/responses/ServerError'
+components:
+  parameters:
+    tenantIDQueryParam:
+      in: query
+      name: tenantId
+      description: Tenant ID of the tenant.
+      required: true
+      schema:
+        type: string
+        example: "2345-3445-3243-2342"
+    tenantDomainQueryParam:
+      in: query
+      name: domain
+      description: Domain name of the user's current tenant.
+      required: true
+      schema:
+        type: string
+        example: "wso2.com"
+    tenantAdminQueryParam:
+      in: query
+      name: username
+      description: Base64 encoded username of the tenant admin.
+      required: true
+      schema:
+        type: string
+        example: "dXNlckBnbWFpbC5jb20="
+  responses:
+    Unauthorized:
+      description: Unauthorized
+    Forbidden:
+      description: Resource Forbidden
+    NotFound:
+      description: Tenant Not Found
+    TenantExist:
+      description: Tenant Exist
+    ServerError:
+      description: Internal Server Error
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Invalid Input Request
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/Error'
+    Conflict:
+      description: Element Already Exists
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+  schemas:
+    TenantReserveRequest:
+      type: object
+      required:
+        - domain
+        - domainId
+        - username
+      properties:
+        domain:
+          type: string
+          example: wso2.com
+          description: Tenant domain of the tenant.
+        domainId:
+            type: string
+            example: "2345-3445-3243-2342"
+            description: Domain ID of the tenant.
+        username:
+          type: string
+          example: user@gmail.com
+          description: Username of the tenant admin.
+        cluster:
+          type: string
+          example: "cluster-1"
+          description: Cluster name of the tenant.
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          example: ATM-10001
+        message:
+          type: string
+          example: Some Error Message
+        description:
+          type: string
+          example: Some Error Description

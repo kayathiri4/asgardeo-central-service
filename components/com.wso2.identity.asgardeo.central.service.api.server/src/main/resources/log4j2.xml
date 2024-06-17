@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  ~ Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+  ~
+  ~ This software is the property of WSO2 LLC. and its suppliers, if any.
+  ~ Dissemination of any information or reproduction of any material contained
+  ~ herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
+  ~ You may not alter or remove any copyright or other notice from copies of this content.
+  ~
+  -->
+<Configuration>
+    <Appenders>
+        <Console name="CONSOLE">
+            <PatternLayout pattern="TID: [%tid] [%d] [%X{Correlation-ID}] : iam-cloud-feature-gate : %5p {%c} - %m%ex%n"/>
+        </Console>
+        <Console name="ACCESS_LOG_CONSOLE">
+            <PatternLayout pattern="iam-cloud-feature-gate-access [%X{Correlation-ID}] %m%ex%n"/>
+            <ThresholdFilter level="INFO"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="ACCESS_LOG" level="INFO" additivity="false">
+            <AppenderRef ref="ACCESS_LOG_CONSOLE"/>
+        </Logger>
+        <Logger name="com.wso2.identity.asgardeo.feature.gate" level="INFO" additivity="false">
+            <AppenderRef ref="CONSOLE"/>
+        </Logger>
+        <Root level="INFO">
+            <AppenderRef ref="CONSOLE"/>
+        </Root>
+    </Loggers>
+</Configuration>
